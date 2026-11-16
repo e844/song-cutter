@@ -9,6 +9,7 @@ import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipe
 import androidx.compose.ui.geometry.Offset
@@ -68,13 +69,13 @@ class UiTest {
         assertNotEquals(before, after)
         shot("android-2-editor")
 
-        compose.onNodeWithTag("play").performClick()
+        compose.onNodeWithTag("play").performScrollTo().performClick()
         Thread.sleep(800)
         shot("android-3-playing")
         compose.onNodeWithTag("play").performClick()
 
         // רינגטון
-        compose.onNodeWithTag("ringtone").performClick()
+        compose.onNodeWithTag("ringtone").performScrollTo().performClick()
         compose.onNodeWithText(Txt.RING_TITLE).assertIsDisplayed()
         shot("android-4-ringtone")
         compose.onNodeWithTag("ring_save").performClick()

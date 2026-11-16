@@ -65,8 +65,9 @@ jobs:
           working-directory: android
           script: |
             adb shell settings put global hide_error_dialogs 1 || true
-            ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true
+            ./gradlew --no-daemon connectedDebugAndroidTest -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true; echo $? > ../test-exit
             mkdir -p ../shots && adb pull /sdcard/Android/data/com.king400.songcutter/files/shots ../shots || true
+            exit $(cat ../test-exit)
       - name: Publish screenshots
         if: always()
         env:
