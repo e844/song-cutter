@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; media-src 'self' media: blob:; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' media:">
+  <title>חותך שירים</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M9.6 6.4a3 3 0 1 0-1.2 1.6L11 10.6 4.6 17a1 1 0 0 0 1.4 1.4l6.4-6.4 6.4 6.4a1 1 0 0 0 1.4-1.4l-5-5 5-5A1 1 0 0 0 18.8 5.6L12.4 12l-2.8-2.8zM7 6a1 1 0 1 1 0-.01z"/></svg>
+      </div>
+      <div>
+        <h1>חותך שירים</h1>
+        <p class="credit">נוצר ע״י <b>king400</b></p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="open-btn" class="btn filled"><span class="ic">📂</span> פתיחת קובץ</button>
+      <button id="history-btn" class="btn tonal"><span class="ic">🕘</span> היסטוריה</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- מסך פתיחה -->
+    <section id="empty" class="dropzone" tabindex="0" role="button" aria-label="בחירת קובץ">
+      <div class="drop-icon" aria-hidden="true">🎵</div>
+      <h2>גרור לכאן שיר או סרטון</h2>
+      <p>או לחץ כדי לבחור קובץ מהמחשב</p>
+      <p class="formats">MP3 · WAV · FLAC · M4A · OGG · WMA · וגם וידאו: MP4 · MKV · MOV · AVI</p>
+      <p class="quality">השמירה תמיד ב-MP3 באיכות <b>320kbps</b></p>
+    </section>
+
+    <!-- עורך -->
+    <section id="editor" hidden>
+      <div class="file-card">
+        <div class="file-main">
+          <div class="file-icon" aria-hidden="true">🎧</div>
+          <div class="file-text">
+            <div id="file-name" class="file-name"></div>
+            <div id="file-info" class="file-info"></div>
+          </div>
+        </div>
+        <button id="change-btn" class="btn text">החלף קובץ</button>
+      </div>
+
+      <div class="wave-card">
+        <div class="wave-tools">
+          <div class="zoom">
+            <button id="zoom-out" class="icon-btn" title="הקטנה (Ctrl + גלגלת)">−</button>
+            <input id="zoom" type="range" min="0" max="100" value="0" dir="ltr" aria-label="זום">
+            <button id="zoom-in" class="icon-btn" title="הגדלה (Ctrl + גלגלת)">+</button>
+            <button id="zoom-fit" class="btn text small">כל השיר</button>
+            <button id="zoom-sel" class="btn text small">התמקד בקטע</button>
+          </div>
+          <div class="hint">גרור את הסמנים ◆ · גרירה על הגל = בחירה חדשה · לחיצה = מעבר לנקודה</div>
+        </div>
+        <div class="wave-wrap" dir="ltr">
+          <canvas id="wave" tabindex="0" aria-label="גל הקול"></canvas>
+        </div>
+        <input id="scroll" class="scroll" type="range" min="0" max="1000" value="0" dir="ltr" aria-label="גלילה בשיר" hidden>
+      </div>
+
+      <div class="controls">
+        <div class="marker-card start">
+          <div class="mk-title"><span class="dot"></span> התחלה</div>
+          <input id="start-time" class="time" dir="ltr" inputmode="decimal" aria-label="זמן התחלה">
+          <div class="nudge">
+            <button class="chip" data-nudge="start" data-d="-1">−1</button>
+            <button class="chip" data-nudge="start" data-d="-0.1">−0.1</button>
+            <button class="chip" data-nudge="start" data-d="0.1">+0.1</button>
+            <button class="chip" data-nudge="start" data-d="1">+1</button>
+          </div>
+          <button class="btn text small" data-here="start">⤓ מנקודת הניגון</button>
+        </div>
+
+        <div class="transport">
+          <div class="len">אורך הקטע <b id="sel-len">0:00.0</b></div>
+          <div class="play-row">
+            <button id="stop" class="icon-btn big" title="עצור">⏹</button>
+            <button id="play-sel" class="fab" title="השמע את הקטע (רווח)">▶</button>
+            <button id="play-pos" class="icon-btn big" title="נגן מנקודת הניגון">⏯</button>
+          </div>
+          <div class="pos" dir="ltr"><span id="pos">0:00.0</span> / <span id="total">0:00.0</span></div>
+        </div>
+
+        <div class="marker-card end">
+          <div class="mk-title"><span class="dot"></span> סוף</div>
+          <input id="end-time" class="time" dir="ltr" inputmode="decimal" aria-label="זמן סוף">
+          <div class="nudge">
+            <button class="chip" data-nudge="end" data-d="-1">−1</button>
+            <button class="chip" data-nudge="end" data-d="-0.1">−0.1</button>
+            <button class="chip" data-nudge="end" data-d="0.1">+0.1</button>
+            <button class="chip" data-nudge="end" data-d="1">+1</button>
+          </div>
+          <button class="btn text small" data-here="end">⤓ מנקודת הניגון</button>
+        </div>
+      </div>
+
+      <div class="save-card">
+        <div class="fades">
+          <label>הגברה הדרגתית בהתחלה
+            <select id="fade-in">
+              <option value="0">ללא</option><option value="0.5">½ שנייה</option><option value="1">שנייה</option>
+              <option value="2">2 שניות</option><option value="3">3 שניות</option><option value="5">5 שניות</option>
+            </select>
+          </label>
+          <label>דעיכה הדרגתית בסוף
+            <select id="fade-out">
+              <option value="0">ללא</option><option value="0.5">½ שנייה</option><option value="1">שנייה</option>
+              <option value="2">2 שניות</option><option value="3">3 שניות</option><option value="5">5 שניות</option>
+            </select>
+          </label>
+        </div>
+        <div class="save-actions">
+          <button id="ringtone-btn" class="btn tonal big">🔔 שמירה כרינגטון</button>
+          <button id="save-btn" class="btn filled big">💾 שמירת הקטע · MP3 ‏320kbps</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">נוצר ע״י <b>king400</b> · <span id="version"></span></footer>
+
+  <!-- היסטוריה -->
+  <aside id="history" class="drawer" hidden aria-label="היסטוריה">
+    <div class="drawer-head">
+      <h2>היסטוריית חיתוכים</h2>
+      <button id="history-close" class="icon-btn" title="סגור">✕</button>
+    </div>
+    <div id="history-list" class="history-list"></div>
+    <div class="drawer-foot"><button id="history-clear" class="btn text danger">ניקוי ההיסטוריה</button></div>
+  </aside>
+  <div id="scrim" class="scrim" hidden></div>
+
+  <!-- רינגטון -->
+  <dialog id="ringtone-dialog">
+    <h2>שמירה כרינגטון</h2>
+    <p class="muted">לאיזה טלפון?</p>
+    <div class="choice">
+      <button class="choice-btn" data-ring="ringtone-android"><b>🤖 אנדרואיד</b><span>MP3 ‏320kbps</span></button>
+      <button class="choice-btn" data-ring="ringtone-iphone"><b>🍎 אייפון</b><span>M4R · עד 40 שניות</span></button>
+    </div>
+    <p id="ring-note" class="muted small"></p>
+    <div class="dlg-actions"><button class="btn text" data-close>ביטול</button></div>
+  </dialog>
+
+  <!-- שמירה בתהליך -->
+  <dialog id="progress-dialog">
+    <h2 id="progress-title">שומר…</h2>
+    <div class="bar"><div id="progress-fill"></div></div>
+    <p id="progress-text" class="muted">0%</p>
+    <div class="dlg-actions"><button id="progress-cancel" class="btn text">ביטול</button></div>
+  </dialog>
+
+  <div id="snackbar" class="snackbar" hidden><span id="snack-text"></span><button id="snack-action" class="btn text" hidden></button></div>
+  <div id="busy" class="busy" hidden><div class="spinner"></div><p>טוען את הקובץ…</p></div>
+
+  <audio id="player" preload="auto"></audio>
+  <script src="../src/logic.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
