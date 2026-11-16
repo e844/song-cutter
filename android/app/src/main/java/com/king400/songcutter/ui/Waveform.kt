@@ -134,7 +134,10 @@ fun Waveform(
                 val tx = x(t)
                 drawRect(cs.onSurfaceVariant, Offset(tx, H - axis), Size(1.dp.toPx(), 4.dp.toPx()))
                 val label = Cut.formatTime(t).let { if (tick >= 1) it.substringBeforeLast('.') else it }
-                drawText(measurer, label, Offset(tx + 3.dp.toPx(), H - axis + 2.dp.toPx()), labelStyle)
+                // מודדים קודם: תווית שלא נכנסת עד הקצה – לא מציירים (אחרת drawText קורס)
+                val layout = measurer.measure(label, labelStyle)
+                val lx = tx + 3.dp.toPx()
+                if (lx >= 0 && lx + layout.size.width <= W) drawText(layout, topLeft = Offset(lx, H - axis + 2.dp.toPx()))
                 t += tick
             }
 
