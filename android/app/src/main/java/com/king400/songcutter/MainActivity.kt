@@ -82,6 +82,7 @@ class MainActivity : ComponentActivity() {
 
     /** פתיחת קובץ (גם לבדיקות) */
     fun open(uri: Uri) = vm.load(uri)
+    fun lastErrorForTest() = vm.lastError
 
     /** "פתח באמצעות" / "שתף" מאפליקציה אחרת */
     private fun handleIntent(intent: Intent?) {

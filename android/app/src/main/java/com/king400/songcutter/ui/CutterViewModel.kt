@@ -47,6 +47,8 @@ class CutterViewModel(app: Application) : AndroidViewModel(app) {
     var message by mutableStateOf<String?>(null)
     var history by mutableStateOf<List<HistoryItem>>(emptyList()); private set
     var askWriteSettings by mutableStateOf(false)
+    /** הסיבה הטכנית לכישלון האחרון (לבדיקות; לא מוצג למשתמש) */
+    var lastError: String? = null; private set
 
     private var loadJob: Job? = null
     private var exportJob: Job? = null
@@ -238,6 +240,7 @@ class CutterViewModel(app: Application) : AndroidViewModel(app) {
                     } else Txt.RING_SAVED
                 } else "${Txt.SAVED}: ${Cut.baseName(outName)}"
             } catch (e: Exception) {
+                lastError = e.toString()
                 if (ringtone) Ringtones.discard(ctx, out)
                 else try { android.provider.DocumentsContract.deleteDocument(ctx.contentResolver, out) } catch (x: Exception) { /* ignore */ }
                 if (!cancel.get()) message = Txt.ERR_SAVE

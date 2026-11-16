@@ -79,7 +79,14 @@ class UiTest {
         compose.onNodeWithText(Txt.RING_TITLE).assertIsDisplayed()
         shot("android-4-ringtone")
         compose.onNodeWithTag("ring_save").performClick()
-        compose.waitUntil(30_000) { compose.onAllNodes(hasText(Txt.RING_SAVED)).fetchSemanticsNodes().isNotEmpty() }
+        compose.waitUntil(30_000) {
+            compose.onAllNodes(hasText(Txt.RING_SAVED, substring = true)).fetchSemanticsNodes().isNotEmpty() ||
+                compose.onAllNodes(hasText(Txt.ERR_SAVE)).fetchSemanticsNodes().isNotEmpty()
+        }
+        var err: String? = null
+        scenario!!.onActivity { err = it.lastErrorForTest() }
+        org.junit.Assert.assertNull("ringtone save failed: $err", err)
+        shot("android-4b-saved")
 
         // היסטוריה
         compose.onNodeWithTag("history_btn").performClick()
