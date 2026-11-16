@@ -17,7 +17,7 @@ object Mp3Encoder {
  * כותב MP3 בקצב קבוע של 320kbps (CBR) מ-PCM 16bit משולב (מונו או סטריאו).
  * LAME ממיר בעצמו לתדירות 44.1kHz אם המקור שונה (למשל 48kHz בסרטונים).
  */
-class Mp3Writer(inRate: Int, private val channels: Int, private val out: OutputStream, kbps: Int = 320) : Closeable {
+class Mp3Writer(private val inRate: Int, private val channels: Int, private val out: OutputStream, kbps: Int = 320) : Closeable {
     private var handle: Long = Mp3Encoder.nativeInit(inRate, channels, kbps, 2)
     private var buf = ByteArray(16384)
 
@@ -28,7 +28,8 @@ class Mp3Writer(inRate: Int, private val channels: Int, private val out: OutputS
 
     fun write(pcm: ShortArray, frames: Int) {
         if (frames <= 0) return
-        val need = (frames * 1.25).toInt() + 7200
+        // הגודל המקסימלי לפי LAME: ‎1.25 × דגימות + 7200 – לפי מספר הדגימות *אחרי* ההמרה ל-44.1kHz
+        val need = (frames * 1.25 * maxOf(1.0, 44100.0 / inRate)).toInt() + 7200
         if (buf.size < need) buf = ByteArray(need)
         val n = Mp3Encoder.nativeEncode(handle, pcm, frames, channels, buf)
         check(n >= 0) { "lame encode failed: $n" }

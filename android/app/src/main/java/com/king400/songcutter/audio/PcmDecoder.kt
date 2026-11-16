@@ -84,7 +84,7 @@ class PcmDecoder(private val context: Context, private val uri: Uri) {
                     if (ii >= 0) {
                         val buf = codec.getInputBuffer(ii)!!
                         val n = ex.readSampleData(buf, 0)
-                        if (n < 0 || ex.sampleTime > endUs + 500_000) {
+                        if (n < 0 || (endUs != Long.MAX_VALUE && ex.sampleTime > endUs + 500_000)) {
                             codec.queueInputBuffer(ii, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM)
                             inputDone = true
                         } else {
