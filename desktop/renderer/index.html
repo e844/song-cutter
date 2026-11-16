@@ -63,8 +63,8 @@
         <input id="scroll" class="scroll" type="range" min="0" max="1000" value="0" dir="ltr" aria-label="גלילה בשיר" hidden>
       </div>
 
-      <div class="controls">
-        <div class="marker-card start">
+      <div class="controls" dir="ltr">
+        <div class="marker-card start" dir="rtl">
           <div class="mk-title"><span class="dot"></span> התחלה</div>
           <input id="start-time" class="time" dir="ltr" inputmode="decimal" aria-label="זמן התחלה">
           <div class="nudge">
@@ -76,7 +76,7 @@
           <button class="btn text small" data-here="start">⤓ מנקודת הניגון</button>
         </div>
 
-        <div class="transport">
+        <div class="transport" dir="rtl">
           <div class="len">אורך הקטע <b id="sel-len">0:00.0</b></div>
           <div class="play-row">
             <button id="stop" class="icon-btn big" title="עצור">⏹</button>
@@ -86,7 +86,7 @@
           <div class="pos" dir="ltr"><span id="pos">0:00.0</span> / <span id="total">0:00.0</span></div>
         </div>
 
-        <div class="marker-card end">
+        <div class="marker-card end" dir="rtl">
           <div class="mk-title"><span class="dot"></span> סוף</div>
           <input id="end-time" class="time" dir="ltr" inputmode="decimal" aria-label="זמן סוף">
           <div class="nudge">

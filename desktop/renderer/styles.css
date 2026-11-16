@@ -110,7 +110,7 @@ main { flex: 1; overflow: auto; padding: 0 24px 12px; }
   border: 1px solid var(--outline); background: var(--surface-2); color: var(--on); font-family: "Segoe UI", system-ui, sans-serif; }
 .time:focus { border-color: var(--primary); outline: none; }
 .time.bad { border-color: var(--danger); }
-.nudge { display: flex; gap: 6px; }
+.nudge { display: flex; gap: 6px; direction: ltr; }
 .transport { padding: 14px 26px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-width: 280px; }
 .len { color: var(--muted); }
 .len b { color: var(--on); font-size: 20px; font-variant-numeric: tabular-nums; margin-inline-start: 6px; }

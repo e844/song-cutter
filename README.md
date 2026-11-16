@@ -21,6 +21,12 @@
 |---|---|---|
 | ![](docs/screenshots/desktop-1-start.png) | ![](docs/screenshots/desktop-5-ringtone.png) | ![](docs/screenshots/desktop-6-history.png) |
 
+**באנדרואיד:**
+
+| מסך פתיחה | עורך | רינגטון |
+|---|---|---|
+| ![](docs/screenshots/android-start.png) | ![](docs/screenshots/android-editor.png) | ![](docs/screenshots/android-ringtone.png) |
+
 ## התקנה
 **Windows**
 1. הורד את `SongCutter-Windows.zip` מדף ה-Releases.

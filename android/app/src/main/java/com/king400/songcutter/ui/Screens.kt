@@ -248,13 +248,13 @@ private fun Editor(vm: CutterViewModel, actions: ScreenActions, onRingtone: () -
             }
         }
 
-        // סמנים
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        // סמנים – ההתחלה משמאל והסוף מימין, כמו בגל הקול
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) { Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             MarkerCard(Txt.START, MarkerColors.start, vm.sel.start, "start", Modifier.weight(1f),
                 onSet = { vm.moveMarker(true, it) }, onNudge = { vm.nudge(true, it) }, onFromPos = { vm.markerFromPos(true) })
             MarkerCard(Txt.END, MarkerColors.end, vm.sel.end, "end", Modifier.weight(1f),
                 onSet = { vm.moveMarker(false, it) }, onNudge = { vm.nudge(false, it) }, onFromPos = { vm.markerFromPos(false) })
-        }
+        } }
 
         // השמעה
         Card(shape = RoundedCornerShape(22.dp), colors = CardDefaults.cardColors(containerColor = cs.surfaceContainerLow)) {
@@ -322,6 +322,7 @@ private fun MarkerCard(
     var bad by remember(value) { mutableStateOf(false) }
     val apply = { Cut.parseTime(text)?.let { onSet(it) } ?: run { bad = true } }
     Card(modifier, shape = RoundedCornerShape(22.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
+      CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Column(Modifier.fillMaxWidth().padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("◆", color = color)
@@ -349,6 +350,7 @@ private fun MarkerCard(
             }
             TextButton(onClick = onFromPos) { Text(Txt.FROM_POS, style = MaterialTheme.typography.labelMedium) }
         }
+      }
     }
 }
 
