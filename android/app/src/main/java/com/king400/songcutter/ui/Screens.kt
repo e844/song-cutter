@@ -88,10 +88,11 @@ fun CutterApp(vm: CutterViewModel, actions: ScreenActions) {
     var showHistory by remember { mutableStateOf(false) }
     var showRingtone by remember { mutableStateOf(false) }
 
+    // מאפסים את ההודעה רק אחרי שהוצגה – איפוס מוקדם מבטל את ההצגה
     LaunchedEffect(vm.message) {
         val m = vm.message ?: return@LaunchedEffect
-        vm.message = null
         snackbar.showSnackbar(m)
+        if (vm.message == m) vm.message = null
     }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
